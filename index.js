@@ -1,6 +1,8 @@
 const Discord = require("discord.js")
 require("dotenv").config()
 
+const generateImage = require("./generateImage")
+
 const client = new Discord.Client({
     intents: [
         "GUILDS",
@@ -21,8 +23,12 @@ client.on("messageCreate", (message) => {
 
 const welcomeChannelId = "983475783320338443"
 
-client.on("guildMemberAdd"), (member) => {
-    member.guild.channels.cache.get(welcomeChannelId).send(`<@${member.id}> needs to get gud. lmao 42069.`)
-}
+client.on("guildMemberAdd", async (member) => {
+    const img = await generateImage(member)
+    member.guild.channels.cache.get(welcomeChannelId).send({
+        content:`Recruit <@${member.id}> has joined the server!`,
+        files: [img]
+    })
+})
 
 client.login(process.env.TOKEN)
